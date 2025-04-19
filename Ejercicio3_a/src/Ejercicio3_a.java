@@ -1,7 +1,6 @@
 public class Ejercicio3_a {
     private final static double E = 0.0001;
     private final static int MIN = 1000;
-    private final static int MAX = 3;
     private final static int CANT = 3;
 
     public static void main(String[] args) {
@@ -9,19 +8,21 @@ public class Ejercicio3_a {
         double[] estacionario_act = { 0, 0, 0 };
         double[] estacionario_ant = { -1.0, -1.0, -1.0 };        
         getVectorEstado(emisiones, estacionario_ant, estacionario_act);
+        System.out.println();
         mostrarArreglo(estacionario_act); 
+        mostrarEmisiones(emisiones);
     }
 
     public static void getVectorEstado(int[] emisiones, double[] ant, double[] act) {
         int mensajes = 0;
         while (!converge(ant, act) || mensajes < MIN) {
             int s = getPrimerSimbolo();
-            for (int i = 0; i < MAX; i++) {
+            for (int i = 0; i < CANT; i++) {
                 s = getSigDadoAnt(s);
             }
             emisiones[s]++;
             mensajes++;
-            for (int i = 0; i < MAX; i++) {
+            for (int i = 0; i < CANT; i++) {
                 ant[i] = act[i];
                 act[i] = (double) emisiones[i] / mensajes;
             }
@@ -36,18 +37,38 @@ public class Ejercicio3_a {
     }
 
     public static void mostrarArreglo(double[] arr) {
+        System.out.println("Mostrando el vector de estado");
         for (int i = 0; i < CANT; i++)
-            System.out.print(arr[i] + " ");
+            System.out.print("| " + arr[i] + " |");
+        System.out.println();
     }
 
-    // Placeholder methods for getPrimerSimbolo and getSigDadoAnt
+    public static void mostrarEmisiones(int[] arr) {
+        System.out.println("Mostrando las emisiones: ");
+        for (int i = 0; i < CANT; i++)
+            System.out.print("| " + arr[i] + " |");
+        System.out.println();
+    }
+
     public static int getPrimerSimbolo() {
-        // Implementation needed
-        return 0; // Placeholder return
+        double [] acum = { 1.0, 1.0, 1.0 };
+        double p = Math.random();
+        for (int i = 0; i < CANT; i++) 
+            if (p < acum[i])
+                return i;
+        return -1; 
     }
 
     public static int getSigDadoAnt(int s) {
-        // Implementation needed
-        return s; // Placeholder return
+        double [][] mat_acum = {
+            {0.25, 0.75, 0.0},
+            {0.50, 1.00, 0.5},
+            {1.00, 1.00, 1.0}
+        };
+        double p = Math.random();
+        for (int i = 0; i < CANT; i++)
+            if (p < mat_acum[i][s])
+                return i;
+        return -1;
     }
 }
